@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://kaigiks.github.io/python-tricks/</loc>
+    
+    <lastmod>2020-06-20T20:09:29.160Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/ssh-forwarding/</loc>
+    
+    <lastmod>2020-06-20T20:09:17.514Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/opencv-foreach/</loc>
+    
+    <lastmod>2020-06-20T20:08:32.816Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/gradient/</loc>
+    
+    <lastmod>2020-06-20T19:31:25.861Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/hello-world/</loc>
+    
+    <lastmod>2019-03-23T19:54:24.376Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/python-cdll/</loc>
+    
+    <lastmod>2017-05-30T21:51:26.000Z</lastmod>
+    
+  </url>
+  
+</urlset>
