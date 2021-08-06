@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<title>
+  
+    [筆記] 動態載入C library (DLL)
+  
+</title>
+
+<meta name="description" content="從第一次知道 python 這個語言時，就聽聞 python 的其中一項強大之處，高彈性： 利用 python coding，遇到關鍵的效能瓶頸再以 C 之類等語言改寫。 CPython 能達到這項目的的方法，個人知道有 2 種：Python&#x2F;C API 和 ctypes. 基於練習的目的，稍微熟悉一下 ctypes 的使用方法。 （如果目的是加速或與其他語言做 binding 就不只這兩">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[筆記] 動態載入C library (DLL)">
+<meta property="og:url" content="http://kaigiks.github.io/python-cdll/index.html">
+<meta property="og:site_name" content="無所得故">
+<meta property="og:description" content="從第一次知道 python 這個語言時，就聽聞 python 的其中一項強大之處，高彈性： 利用 python coding，遇到關鍵的效能瓶頸再以 C 之類等語言改寫。 CPython 能達到這項目的的方法，個人知道有 2 種：Python&#x2F;C API 和 ctypes. 基於練習的目的，稍微熟悉一下 ctypes 的使用方法。 （如果目的是加速或與其他語言做 binding 就不只這兩">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2017-05-22T05:16:53.000Z">
+<meta property="article:modified_time" content="2017-05-30T22:51:26.000Z">
+<meta property="article:author" content="kaigiks">
+<meta name="twitter:card" content="summary">
+
+
+  <link rel="alternative" href="/atom.xml" title="無所得故" type="application/atom+xml">
+
+
+
+  <link rel="icon" href="/favicon.png">
+
+
+
+<link rel="stylesheet" href="/perfect-scrollbar/css/perfect-scrollbar.min.css">
+
+
+<link rel="stylesheet" href="/styles/main.css">
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body
+  
+    class="monochrome"
+  
+  >
+  <div class="mobile-header">
+  <button class="sidebar-toggle" type="button">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </button>
+  <a class="title" href="/">無所得故</a>
+</div>
+
+  <div class="main-container">
+    <div class="sidebar">
+  <div class="header">
+    <h1 class="title"><a href="/">無所得故</a></h1>
+    
+    <div class="info">
+      <div class="content">
+        
+        
+          <div class="author">kaigiks</div>
+        
+      </div>
+      
+        <div class="avatar">
+          
+            <img src="https://avatars0.githubusercontent.com/u/8656942?v=3&amp;s=460">
+          
+        </div>
+      
+    </div>
+  </div>
+  <div class="body">
+    
+      
+        <ul class="nav">
+          
+            
+              <li class="category-list-container">
+                <a href="javascript:;">類別</a>
+                <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Math/">Math</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li></ul>
+              </li>
+            
+          
+            
+              <li class="tag-list-container">
+                <a href="javascript:;">標籤</a>
+                <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Calculus/" rel="tag">Calculus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numerical-Analysis/" rel="tag">Numerical Analysis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Numpy/" rel="tag">Numpy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenCV/" rel="tag">OpenCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scipy/" rel="tag">Scipy</a><span class="tag-list-count">1</span></li></ul>
+              </li>
+            
+          
+            
+              <li class="archive-list-container">
+                <a href="javascript:;">彙整</a>
+                <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/">2017</a><span class="archive-list-count">4</span></li></ul>
+              </li>
+            
+          
+        </ul>
+      
+        <ul class="nav">
+          
+            
+              <li>
+                <a href="/" title="Homepage" external="false">Homepage</a>
+              </li>
+            
+          
+            
+              <li>
+                <a href="/archives" title="By Year" external="false">By Year</a>
+              </li>
+            
+          
+        </ul>
+      
+        <ul class="nav">
+          
+            
+              <li>
+                <a href="https://github.com/denjones/hexo-theme-chan" title="Chan" target="_blank" rel="noopener">Chan</a>
+              </li>
+            
+          
+            
+              <li>
+                <a href="https://github.com/kaigiks" title="Github" target="_blank" rel="noopener">Github</a>
+              </li>
+            
+          
+            
+              <li>
+                <a href="/atom.xml" title="RSS" external="false">RSS</a>
+              </li>
+            
+          
+        </ul>
+      
+    
+  </div>
+</div>
+
+    <div class="main-content">
+      
+        <div style="max-width: 1000px">
+      
+          <article id="post-python-cdll" class="article article-type-post">
+  
+    <h1 class="article-header">
+      [筆記] 動態載入C library (DLL)
+    </h1>
+  
+  
+
+  <div class="article-info">
+    <span class="article-date">
+  2017-05-22
+</span>
+
+    
+	<span class="article-category tagcloud">
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Python/">Python</a></li></ul>
+	</span>
+
+
+    
+
+  </div>
+  <div class="article-entry">
+    <p>從第一次知道 python 這個語言時，就聽聞 python 的其中一項強大之處，高彈性：<br />
+利用 python coding，遇到關鍵的效能瓶頸再以 C 之類等語言改寫。</p>
+<p>CPython 能達到這項目的的方法，個人知道有 2 種：Python/C API 和 ctypes.<br />
+基於練習的目的，稍微熟悉一下 ctypes 的使用方法。</p>
+<p><span style="color:grey">（如果目的是加速或與其他語言做 binding 就不只這兩項了。例如有 RPython, Cython, …等派生或是擴充語言。）<span></p>
+<span id="more"></span>
+<h4 id="ctypes">ctypes</h4>
+<p>使用 ctype 基本上就是把 C code build 成 share library 檔，從 python 去撈 symbol 執行。</p>
+<p>以下是一個用 C 語言寫成的範例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* File: c_sqrt.c */</span></span><br><span class="line">doublesqrt(<span class="keyword">double</span> k) &#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">double</span> x=k;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</span><br><span class="line">        x = x - (x*x-k)/(<span class="number">2</span>*x); <span class="comment">// Newton&#x27;s Iteration.</span></span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接著把這個 compile 成 shared library.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc c_sqrt.c -shared -fPIC -O2 -o c_sqrt.so</span><br></pre></td></tr></table></figure>
+<p>在 python 中，利用 ctypes module 來讀檔，並對應設定好 argument / return type：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line">dyn = ctype.CDLL(<span class="string">&#x27;./c_sqrt.so&#x27;</span>)</span><br><span class="line">dyn.sqrt.argtypes = [ctypes.c_double] <span class="comment"># default: None</span></span><br><span class="line">dyn.sqrt.restype = ctypes.c_double    <span class="comment"># default: c_int</span></span><br><span class="line"><span class="built_in">print</span>( dyn.sqrt(<span class="number">5</span>) )</span><br></pre></td></tr></table></figure>
+<p>這段程式造出一個 CDLL 的物件 dyn。 利用 dyn 去讀取 sqrt 時，會到 c_sqrt.so 找到 sqrt 的 symbol，加到 dyn 這個物件裡。</p>
+<p>預設的情況下，一個由CDLL讀入的C函數是無參數、回傳值為整數的函數。 如果直接呼叫 dyn.sqrt(5) 也只會得到 0 而已。 必須修改傳入的參數的型別（如第四行那樣，有多少參數就寫進 list 裡）， restype 是回傳的型別。</p>
+<p>若回傳的值是一個結構包裝的東西， 或許還得要再經過宣告一個新的類別來使用：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">foo</span>(<span class="params">Structure</span>):</span></span><br><span class="line">    _fields_=[(<span class="string">&quot;val&quot;</span>, c_int), (<span class="string">&quot;dat&quot;</span>, POINTER(c_int))]</span><br></pre></td></tr></table></figure>
+<h4 id="參考資料">參考資料：</h4>
+<ol type="1">
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3.6/library/ctypes.html">Python Document: ctypes — A foreign function library for Python</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.ez2learn.com/2009/03/21/python-evolution-ctypes/">程式設計遇上小提琴 - Python的進步: ctypes</a></li>
+<li>（參考） <a target="_blank" rel="noopener" href="http://tldp.org/HOWTO/Program-Library-HOWTO/dl-libraries.html">Dynamically Loaded (DL) Libraries</a> ，看看C語言中怎麼做到上面的事情.</li>
+</ol>
+
+  </div>
+  <footer class="article-footer">
+    
+  <div class="cc">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/deed.z" target="_blank" title="姓名標示-相同方式分享">
+      <img src="/images/cc/cc.png">
+      
+          <img src="/images/cc/by.png">
+        
+          <img src="/images/cc/sa.png">
+      
+      <span>
+        本著作係採用創用 CC 姓名標示-相同方式分享 4.0 國際 授權條款授權.
+      </span>
+    </a>
+  </div>
+
+
+    
+
+  </footer>
+</article>
+
+
+
+
+
+
+
+          <div class="main-footer">
+  
+    © 2021 無所得故 - Powered by <a href="http://hexo.io" target="_blank">Hexo</a> - Theme <a href="https://github.com/denjones/hexo-theme-chan" target="_blank">Chan</a>
+  
+</div>
+
+      
+        </div>
+      
+    </div>
+  </div>
+  
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/PhotoSwipe/photoswipe.css">
+
+  
+<link rel="stylesheet" href="/PhotoSwipe/default-skin/default-skin.css">
+
+
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+  <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+             It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+      <!-- Container that holds slides.
+                PhotoSwipe keeps only 3 of them in the DOM to save memory.
+                Don't modify these 3 pswp__item elements, data is added later on. -->
+      <div class="pswp__container">
+        <div class="pswp__item"></div>
+        <div class="pswp__item"></div>
+        <div class="pswp__item"></div>
+      </div>
+
+      <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+      <div class="pswp__ui pswp__ui--hidden">
+
+        <div class="pswp__top-bar">
+
+          <!--  Controls are self-explanatory. Order can be changed. -->
+
+          <div class="pswp__counter"></div>
+
+          <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+          <button class="pswp__button pswp__button--share" title="Share"></button>
+
+          <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+          <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+          <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+          <!-- element will get class pswp__preloader--active when preloader is running -->
+          <div class="pswp__preloader">
+            <div class="pswp__preloader__icn">
+              <div class="pswp__preloader__cut">
+                <div class="pswp__preloader__donut"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+          <div class="pswp__share-tooltip"></div>
+        </div>
+
+        <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+
+        <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+        <div class="pswp__caption">
+          <div class="pswp__caption__center"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+<script src="/PhotoSwipe/photoswipe.js"></script>
+
+  
+<script src="/PhotoSwipe/photoswipe-ui-default.js"></script>
+
+
+
+
+<script src="/perfect-scrollbar/js/min/perfect-scrollbar.min.js"></script>
+
+
+<script src="/scripts/main.js"></script>
+
+
+</body>
+</html>

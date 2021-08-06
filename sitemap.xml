@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://kaigiks.github.io/python-tricks/</loc>
+    
+    <lastmod>2021-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/opencv-foreach/</loc>
+    
+    <lastmod>2021-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/gradient/</loc>
+    
+    <lastmod>2021-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/ssh-forwarding/</loc>
+    
+    <lastmod>2021-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/hello-world/</loc>
+    
+    <lastmod>2019-07-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/python-cdll/</loc>
+    
+    <lastmod>2017-05-30</lastmod>
+    
+  </url>
+  
+
+  <url>
+    <loc>http://kaigiks.github.io/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>http://kaigiks.github.io/tags/Calculus/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/tags/OpenCV/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/tags/C/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/tags/Numerical-Analysis/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/tags/Numpy/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/tags/Scipy/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>http://kaigiks.github.io/categories/Math/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://kaigiks.github.io/categories/Python/</loc>
+    <lastmod>2021-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>
